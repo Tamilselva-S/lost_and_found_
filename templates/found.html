@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4">Report a Found Item</h2>
+<form method="POST" enctype="multipart/form-data">
+  <div class="mb-3">
+    <label class="form-label">Your Name</label>
+    <input type="text" class="form-control" name="name" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Item Description</label>
+    <textarea class="form-control" name="description" rows="3" required></textarea>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Location Found</label>
+    <input type="text" class="form-control" name="location" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Contact Info</label>
+    <input type="text" class="form-control" name="contact" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Upload Image</label>
+    <input type="file" class="form-control" name="image" required>
+  </div>
+  <button type="submit" class="btn btn-success">Submit</button>
+</form>
+{% endblock %}
