@@ -4,6 +4,10 @@ import os
 from datetime import datetime
 import yagmail
 from fpdf import FPDF  # Add this line
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
@@ -11,11 +15,13 @@ app.config['REPORT_FOLDER'] = 'static/reports'
 
 # MySQL connection
 conn = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="selva2005",  # Update if needed
-    database="lost_found_db"
+    host=os.getenv("MYSQLHOST"),
+    user=os.getenv("MYSQLUSER"),
+    password=os.getenv("MYSQLPASSWORD"),
+    database=os.getenv("MYSQLDATABASE"),
+    port=int(os.getenv("MYSQLPORT"))
 )
+
 cursor = conn.cursor()
 
 # Gmail Setup
@@ -80,7 +86,7 @@ Thanks,
 Lost & Found System
 """
     # Generate PDF first
-    report_pdf = generate_pdf(name, description, location, contact, item_type, image_filename)
+    
 
     yag = yagmail.SMTP(sender_email, app_password)
     yag.send(
