@@ -51,7 +51,14 @@ body {
   width: auto;
   margin-right: 80px;
   vertical-align: middle;
-  background-color: thistle;
+  background-color: rgb(230, 227, 227);
+}
+#preview {
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  padding: 5px;
+  border-radius: 8px;
+  background-color: #fff;
 }
 
 
