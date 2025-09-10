@@ -1,5 +1,13 @@
+<<<<<<< HEAD
 Flask
 mysql-connector-python
 yagmail
 fpdf
 gunicorn
+=======
+Flask
+mysql-connector-python
+yagmail
+fpdf
+gunicorn
+>>>>>>> a2e091152b674da39a30d9aa6e0b55d23d81ff94
