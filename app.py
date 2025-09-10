@@ -1,21 +1,31 @@
 from flask import Flask, render_template, request, redirect, url_for
-import mysql.connector
+import sqlite3
 import os
 from datetime import datetime
 import yagmail
 import base64
 
-app = Flask(__name__)
+app = Flask(_name_)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
-# MySQL connection
-conn = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="selva2005",  # Update if needed
-    database="lost_found_db"
-)
+# ✅ SQLite connection
+conn = sqlite3.connect("lost_found.db", check_same_thread=False)
 cursor = conn.cursor()
+
+# ✅ Ensure table exists
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS items (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    type TEXT,
+    name TEXT,
+    description TEXT,
+    location TEXT,
+    contact TEXT,
+    image TEXT,
+    date TEXT
+)
+""")
+conn.commit()
 
 # Gmail Setup
 sender_email = "lostandfound.act@gmail.com"
@@ -23,11 +33,11 @@ app_password = "ohehmwbnkjzgtxgg"  # App password
 
 recipients = [
     "23cse171@act.edu.in",
-    "23cse153@act.edu.in",#Sathya
-    "23cse144@act.edu.in",#R
-    "23cse135@act.edu.in",  # Sam
-    # "23cse131@act.edu.in",#Rohit
-    "kalarani.cse@act.edu.in"#Kalarani mam
+    "23cse153@act.edu.in", # Sathya
+    "23cse144@act.edu.in", # R
+    "23cse135@act.edu.in", # Sam
+    # "23cse131@act.edu.in", # Rohit
+    # "kalarani.cse@act.edu.in" # Kalarani mam
 ]
 
 # 📧 Send Email with Inline Image
@@ -129,7 +139,7 @@ def lost():
             image.save(filepath)
 
         cursor.execute(
-            "INSERT INTO items (type, name, description, location, contact, image, date) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+            "INSERT INTO items (type, name, description, location, contact, image, date) VALUES (?, ?, ?, ?, ?, ?, ?)",
             ('Lost', name, description, location, contact, filename, datetime.now())
         )
         conn.commit()
@@ -162,7 +172,7 @@ def found():
             image.save(filepath)
 
         cursor.execute(
-            "INSERT INTO items (type, name, description, location, contact, image, date) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+            "INSERT INTO items (type, name, description, location, contact, image, date) VALUES (?, ?, ?, ?, ?, ?, ?)",
             ('Found', name, description, location, contact, filename, datetime.now())
         )
         conn.commit()
@@ -172,7 +182,7 @@ def found():
 
     return render_template('found.html')
 
-# 👁️ View All
+# 👁 View All
 @app.route('/view')
 def view_items():
     cursor.execute("SELECT * FROM items")
@@ -182,7 +192,7 @@ def view_items():
 # ❌ Delete
 @app.route('/delete/<int:id>', methods=['POST'])
 def delete_item(id):
-    cursor.execute("SELECT image FROM items WHERE id = %s", (id,))
+    cursor.execute("SELECT image FROM items WHERE id = ?", (id,))
     result = cursor.fetchone()
 
     if result:
@@ -191,11 +201,11 @@ def delete_item(id):
         if os.path.exists(image_path):
             os.remove(image_path)
 
-        cursor.execute("DELETE FROM items WHERE id = %s", (id,))
+        cursor.execute("DELETE FROM items WHERE id = ?", (id,))
         conn.commit()
 
     return redirect(url_for('view_items'))
 
-if __name__ == '__main__':
+if _name_ == '_main_':
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     app.run(debug=True)
