@@ -5,7 +5,7 @@ from datetime import datetime
 import yagmail
 import base64
 
-app = Flask(_name_)
+app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
 # ✅ SQLite connection
@@ -209,3 +209,4 @@ def delete_item(id):
 if _name_ == '_main_':
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     app.run(debug=True)
+
